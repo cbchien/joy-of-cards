@@ -1,9 +1,11 @@
 import os
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+import lob
 from dotenv import load_dotenv
-load_dotenv()
 
+load_dotenv()
+lob.api_key = os.getenv('LOB_API_KEY')
 app = Flask(__name__)
 
 app.config.from_object(os.getenv('APP_SETTINGS'))
@@ -15,7 +17,9 @@ db = SQLAlchemy(app)
 def hello():
     return "Hello World!"
 
+from lobUtils import LobUltilities
 from models import User, PostCard
+
 @app.route("/api/users", methods=['GET'])
 def get_all_users():
     try:
@@ -81,15 +85,18 @@ def update_user_by(userId):
 
 
 @app.route("/api/post-card", methods=['POST'])
-def send_post_card_to(userId):
+def send_post_card():
     try:
+        LobUtil = LobUltilities()
+        userId = request.args.get('receiver')
         user = User.query.filter_by(id=userId).first()
+        LobUtil.send_post_card_to(user.id)
         return 'Post card sent to {}'.format(user.id)
     except Exception as e:
         return(str(e))
 
 
-@app.route("/api/post-card", methods=['GET'])
+@app.route("/api/post-card/<postCardId>", methods=['GET'])
 def get_post_card_by(postCardId):
     try:
         post_card = PostCard.query.filter_by(id=postCardId).first()

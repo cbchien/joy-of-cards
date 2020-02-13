@@ -69,6 +69,7 @@ class PostCard(db.Model):
         self.post_card_id = post_card_id
         self.receiver_id = receiver_id
         self.send_date = send_date
+        self.url = url
         self.created_at = date.today()
 
         def __repr__(self):
