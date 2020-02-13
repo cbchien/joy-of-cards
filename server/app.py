@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request, jsonify
+from sqlalchemy.sql import func
 from flask_sqlalchemy import SQLAlchemy
 import lob
 from dotenv import load_dotenv
@@ -104,6 +105,16 @@ def get_post_card_by(postCardId):
     except Exception as e:
         return(str(e))
 
+@app.route("/api/post-card/count", methods=['GET'])
+def get_total_sent_count():
+    try:
+        total_count = 0
+        query = db.session.query(func.sum(User.post_card_received).label("total_sent"))
+        if query.scalar() is not None:
+            total_count = query.scalar()
+        return jsonify({'total': total_count})
+    except Exception as e:
+        return(str(e))
 
 if __name__ == '__main__':
     app.run()
