@@ -32,9 +32,7 @@ class LobUltilities:
                     'address_city':    receiver.address_city,
                     'address_state':   receiver.address_state,
                     'address_zip':     receiver.address_zip_code,
-                    # 'address_country': receiver.address_country
-                    'address_country': 'US'
-
+                    'address_country': receiver.address_country
                 },
                 from_address=from_address,
                 size='4x6',
