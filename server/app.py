@@ -21,10 +21,23 @@ from models import User
 def add_user():
     name = request.args.get('name')
     birthday = request.args.get('birthday')
+    address_city = request.args.get('address_city')
+    address_country = request.args.get('address_country')
+    address_line_1 = request.args.get('address_line_1')
+    address_line_2 = request.args.get('address_line_2')
+    address_state = request.args.get('address_state')
+    address_zip_code = request.args.get('address_zip_code')
+
     try:
         user = User(
             name=name,
             birthday=birthday,
+            address_city=address_city,
+            address_country=address_country,
+            address_line_1=address_line_1,
+            address_line_2=address_line_2,
+            address_state=address_state,
+            address_zip_code=address_zip_code
         )
         db.session.add(user)
         db.session.commit()
