@@ -17,7 +17,15 @@ def hello():
 
 
 from models import User
-@app.route("/add")
+@app.route("/api/users", methods=['GET'])
+def get_all_users():
+    try:
+        users = User.query.all()
+        return jsonify([user.serialize() for user in users])
+    except Exception as e:
+        return(str(e))
+
+@app.route("/api/users", methods=['POST'])
 def add_user():
     name = request.args.get('name')
     birthday = request.args.get('birthday')
@@ -42,27 +50,32 @@ def add_user():
         db.session.add(user)
         db.session.commit()
         return "User added. user id={}".format(user.id)
+
     except Exception as e:
         return(str(e))
 
 
-@app.route("/getall")
-def get_all():
+@app.route("/api/users/<userId>", methods=['GET'])
+def get_user_by(userId):
     try:
-        users = User.query.all()
-        return jsonify([user.serialize() for user in users])
-    except Exception as e:
-        return(str(e))
-
-
-@app.route("/get/<id_>")
-def get_by_id(id_):
-    try:
-        user = User.query.filter_by(id=id_).first()
+        user = User.query.filter_by(id=userId).first()
         return jsonify(user.serialize())
     except Exception as e:
         return(str(e))
 
+@app.route("/api/users/<userId>", methods=['PUT'])
+def update_user_by(userId):
+    user = User.query.filter_by(id=userId).first()
+    fields = ['name', 'birthday', 'address_city', 'address_country', 'address_line_1', 'address_line_2', 'address_state', 'address_zip_code']
+
+    try:
+        for field in fields:
+            if request.args.get(field) is not None:
+                setattr(user, field, request.args.get(field))
+        db.session.commit()
+        return "User updated. user id={} {}".format(user.id, user.name)
+    except Exception as e:
+        return(str(e))
 
 if __name__ == '__main__':
     app.run()
