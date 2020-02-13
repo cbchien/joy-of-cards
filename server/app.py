@@ -15,8 +15,7 @@ db = SQLAlchemy(app)
 def hello():
     return "Hello World!"
 
-
-from models import User
+from models import User, PostCard
 @app.route("/api/users", methods=['GET'])
 def get_all_users():
     try:
@@ -24,6 +23,7 @@ def get_all_users():
         return jsonify([user.serialize() for user in users])
     except Exception as e:
         return(str(e))
+
 
 @app.route("/api/users", methods=['POST'])
 def add_user():
@@ -63,10 +63,12 @@ def get_user_by(userId):
     except Exception as e:
         return(str(e))
 
+
 @app.route("/api/users/<userId>", methods=['PUT'])
 def update_user_by(userId):
     user = User.query.filter_by(id=userId).first()
-    fields = ['name', 'birthday', 'address_city', 'address_country', 'address_line_1', 'address_line_2', 'address_state', 'address_zip_code']
+    fields = ['name', 'birthday', 'address_city', 'address_country',
+              'address_line_1', 'address_line_2', 'address_state', 'address_zip_code']
 
     try:
         for field in fields:
@@ -76,6 +78,25 @@ def update_user_by(userId):
         return "User updated. user id={} {}".format(user.id, user.name)
     except Exception as e:
         return(str(e))
+
+
+@app.route("/api/post-card", methods=['POST'])
+def send_post_card_to(userId):
+    try:
+        user = User.query.filter_by(id=userId).first()
+        return 'Post card sent to {}'.format(user.id)
+    except Exception as e:
+        return(str(e))
+
+
+@app.route("/api/post-card", methods=['GET'])
+def get_post_card_by(postCardId):
+    try:
+        post_card = PostCard.query.filter_by(id=postCardId).first()
+        return jsonify(post_card.serialize())
+    except Exception as e:
+        return(str(e))
+
 
 if __name__ == '__main__':
     app.run()
