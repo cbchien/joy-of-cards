@@ -34,17 +34,17 @@ def get_all_users():
 
 @app.route("/api/users", methods=['POST'])
 def add_user():
-    name = request.args.get('name')
-    birthday_day = request.args.get('birthday_day')
-    birthday_month = request.args.get('birthday_month')
-    birthday_year = request.args.get('birthday_year')
-    address_city = request.args.get('address_city')
-    address_country = request.args.get('address_country')
-    address_line_1 = request.args.get('address_line_1')
-    address_line_2 = request.args.get('address_line_2')
-    address_state = request.args.get('address_state')
-    address_zip_code = request.args.get('address_zip_code')
-
+    body = request.json
+    name = body.get('name')
+    birthday_day = body.get('birthday_day')
+    birthday_month = body.get('birthday_month')
+    birthday_year = body.get('birthday_year')
+    address_city = body.get('address_city')
+    address_country = body.get('address_country')
+    address_line_1 = body.get('address_line_1')
+    address_line_2 = body.get('address_line_2')
+    address_state = body.get('address_state')
+    address_zip_code = body.get('address_zip_code')
     try:
         user = User(
             name=name,
@@ -59,8 +59,8 @@ def add_user():
             address_zip_code=address_zip_code
         )
         db.session.add(user)
-        db.session.commit()
-        return "User added. user id={}".format(user.id)
+        # db.session.commit()
+        return jsonify(user.serialize())
 
     except Exception as e:
         return(str(e))
@@ -77,14 +77,15 @@ def get_user_by(userId):
 
 @app.route("/api/users/<userId>", methods=['PUT'])
 def update_user_by(userId):
+    body = request.json
     user = User.query.filter_by(id=userId).first()
-    fields = ['name', 'birthday', 'address_city', 'address_country',
+    fields = ['name', 'birthday_month', 'birthday_day', 'birthday_year','address_city', 'address_country',
               'address_line_1', 'address_line_2', 'address_state', 'address_zip_code']
 
     try:
         for field in fields:
-            if request.args.get(field) is not None:
-                setattr(user, field, request.args.get(field))
+            if body.get(field) is not None:
+                setattr(user, field, body.get(field))
         db.session.commit()
         return "User updated. user id={} {}".format(user.id, user.name)
     except Exception as e:
