@@ -4,10 +4,10 @@ import classnames from "classnames";
 
 import "./Input.scss";
 
-const Input = ({ className, ...otherProps }) => {
+const Input = ({ title, className, ...otherProps }) => {
   const css = classnames("joy-of-cards-input-text", className);
 
-  return <input type="text" className={css} {...otherProps} />;
+  return (<span>{title}: <input type="text" className={css} {...otherProps} /></span>);
 };
 
 Input.propTypes = {

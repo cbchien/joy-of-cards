@@ -40,7 +40,6 @@ class LandingPage extends Component {
 
   async getPostCardCount() {
     const res = await postCardsAction.getTotalPostCardCount();
-    console.log(res)
     if (res) this.setState({ totalPostCardSent: res.total });
   }
 
