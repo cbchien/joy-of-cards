@@ -12,7 +12,9 @@ class User(db.Model):
     address_line_2 = db.Column(db.String(64))
     address_state = db.Column(db.String(20))
     address_zip_code = db.Column(db.Integer)
-    birthday = db.Column(db.Date)
+    birthday_day = db.Column(db.Integer)
+    birthday_month = db.Column(db.Integer)
+    birthday_year = db.Column(db.Integer)
     deactivated = db.Column(db.Boolean, default=False)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
@@ -20,14 +22,16 @@ class User(db.Model):
     created_at = db.Column(db.Date)
     updated_at = db.Column(db.Date)
 
-    def __init__(self, address_city, address_country, address_line_1, address_line_2, address_state, address_zip_code, name, birthday):
+    def __init__(self, address_city, address_country, address_line_1, address_line_2, address_state, address_zip_code, name, birthday_day, birthday_month, birthday_year):
         self.address_city = address_city
         self.address_country = address_country
         self.address_line_1 = address_line_1
         self.address_line_2 = address_line_2
         self.address_state = address_state
         self.address_zip_code = address_zip_code
-        self.birthday = birthday
+        self.birthday_day = birthday_day
+        self.birthday_month = birthday_month
+        self.birthday_year = birthday_year
         self.created_at = date.today()
         self.updated_at = date.today()
         self.name = name

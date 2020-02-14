@@ -33,7 +33,9 @@ def get_all_users():
 @app.route("/api/users", methods=['POST'])
 def add_user():
     name = request.args.get('name')
-    birthday = request.args.get('birthday')
+    birthday_day = request.args.get('birthday_day')
+    birthday_month = request.args.get('birthday_month')
+    birthday_year = request.args.get('birthday_year')
     address_city = request.args.get('address_city')
     address_country = request.args.get('address_country')
     address_line_1 = request.args.get('address_line_1')
@@ -44,7 +46,9 @@ def add_user():
     try:
         user = User(
             name=name,
-            birthday=birthday,
+            birthday_day=birthday_day,
+            birthday_month=birthday_month,
+            birthday_year=birthday_year,
             address_city=address_city,
             address_country=address_country,
             address_line_1=address_line_1,
@@ -115,6 +119,8 @@ def get_total_sent_count():
         return jsonify({'total': total_count})
     except Exception as e:
         return(str(e))
+
+from cron import scheduler
 
 if __name__ == '__main__':
     app.run()
