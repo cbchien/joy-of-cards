@@ -65,6 +65,13 @@ def add_user():
     except Exception as e:
         return(str(e))
 
+@app.route("/api/users/post-cards/<userId>", methods=['GET'])
+def get_post_cards_by(userId):
+    try:
+        post_cards = PostCard.query.filter_by(receiver_id=userId).all()
+        return jsonify([post_card.serialize() for post_card in post_cards])
+    except Exception as e:
+        return(str(e))
 
 @app.route("/api/users/<userId>", methods=['GET'])
 def get_user_by(userId):
