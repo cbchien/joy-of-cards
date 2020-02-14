@@ -7,7 +7,7 @@ const postCardAction = {
     })
       .then(res => res.json())
       .then(res => {
-        if (res.status != 200) {
+        if (res.confirmation && res.confirmation === 'fail') {
           throw res.message;
         } else {
           return res;
@@ -21,7 +21,7 @@ const postCardAction = {
     })
       .then(res => res.json())
       .then(res => {
-        if (res.status != 200) {
+        if (res.confirmation && res.confirmation === 'fail') {
           throw res.message;
         } else {
           return res;
@@ -33,7 +33,7 @@ const postCardAction = {
     return fetch(`${process.env.API_URL}/post-card/count`, { method: "GET" })
       .then(res => res.json())
       .then(res => {
-        if (res.status != 200) {
+        if (res.confirmation && res.confirmation === 'fail') {
           throw res.message;
         } else {
           return res;
@@ -47,7 +47,7 @@ const postCardAction = {
     })
       .then(res => res.json())
       .then(res => {
-        if (res.status != 200) {
+        if (res.confirmation && res.confirmation === 'fail') {
           throw res.message;
         } else {
           return res;

@@ -5,7 +5,7 @@ const userAction = {
     return fetch(`${process.env.API_URL}/users/${userId}`, { method: "GET" })
       .then(res => res.json())
       .then(res => {
-        if (res.status != 200) {
+        if (res.confirmation && res.confirmation === 'fail') {
           throw res.message;
         } else {
           return res;
@@ -13,17 +13,19 @@ const userAction = {
       })
       .catch(err => console.log(err));
   },
-  getUsers() {
-    return fetch(`${process.env.API_URL}/users`, { method: "GET" })
+  async getUsers() {
+    const response = await fetch(`${process.env.API_URL}/users`, { method: "GET" })
       .then(res => res.json())
       .then(res => {
-        if (res.status != 200) {
+          console.log('getUsers then', res)
+        if (res.confirmation && res.confirmation === 'fail') {
           throw res.message;
         } else {
           return res;
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log('error', err));
+    return response
   },
   createUser({
     name,
@@ -58,7 +60,7 @@ const userAction = {
     })
       .then(res => res.json())
       .then(res => {
-        if (res.status != 200) {
+        if (res.confirmation && res.confirmation === 'fail') {
           throw res.message;
         } else {
           return res;
@@ -102,7 +104,7 @@ const userAction = {
     })
       .then(res => res.json())
       .then(res => {
-        if (res.status != 200) {
+        if (res.confirmation && res.confirmation === 'fail') {
           throw res.message;
         } else {
           return res;
