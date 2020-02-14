@@ -75,16 +75,16 @@ class PostCard(db.Model):
         self.url = url
         self.created_at = date.today()
 
-        def __repr__(self):
-            return '<post card id {}>'.format(self.post_card_id)
+    def __repr__(self):
+        return '<post card id {}>'.format(self.post_card_id)
 
-        def serialize(self):
-            return {
-                'id': self.id,
-                'date_created': self.date_created,
-                'expected_delivery_date': self.expected_delivery_date,
-                'post_card_id': self.post_card_id,
-                'receiver_id': self.receiver_id,
-                'send_date': self.send_date,
-                'url': self.url
-            }
+    def serialize(self):
+        return {
+            'id': self.id,
+            'date_created': self.date_created,
+            'expected_delivery_date': self.expected_delivery_date,
+            'post_card_id': self.post_card_id,
+            'receiver_id': self.receiver_id,
+            'send_date': self.send_date,
+            'url': self.url
+        }
