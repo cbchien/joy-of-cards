@@ -40,7 +40,9 @@ class User(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'birthday': self.birthday,
+            'birthday_day': self.birthday_day,
+            'birthday_month': self.birthday_month,
+            'birthday_year': self.birthday_year,
             'deactivated': self.deactivated,
             'created_at': self.created_at,
             'updated_at': self.updated_at,
