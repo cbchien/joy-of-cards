@@ -1,0 +1,15 @@
+@import "../../../variables";
+
+.joy-of-cards-btn {
+  padding: 12px 20px;
+  margin: 3px;
+  background-color: $primary-color;
+  color: $white;
+  min-width: 130px;
+  border-radius: 3px;
+  border: 0px;
+
+  &:hover {
+    background-color: $secondary-color;
+  }
+}

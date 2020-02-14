@@ -1,0 +1,18 @@
+@import "../../../variables";
+
+.joy-of-cards-input-text {
+  padding: 12px 20px;
+  margin: 3px;
+  background-color: #ffffff;
+  min-width: 100px;
+  border-radius: 3px;
+  border: 1px solid $gray;
+
+  &:hover {
+    box-shadow: 0px 0px 8px 1px #2684ff;
+  }
+
+  &:focus {
+    box-shadow: 0px 0px 8px 1px #2684ff;
+  }
+}

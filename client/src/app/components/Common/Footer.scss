@@ -1,0 +1,20 @@
+@import "../../../variables";
+
+.joy-of-cards-footer {
+  position: fixed;
+  text-align: center;
+  bottom: 0;
+  width: 100%;
+
+  .joy-of-cards-footer__title {
+    font-size: $font-normal;
+  }
+
+  .joy-of-cards-footer__text {
+    font-size: $font-small;
+
+    a {
+      color: $black;
+    }
+  }
+}
