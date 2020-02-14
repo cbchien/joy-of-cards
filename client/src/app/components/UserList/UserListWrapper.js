@@ -4,6 +4,7 @@ import UserList from "./UserList";
 import CreateUser from "./CreateUser";
 import Modal from "../../components/Common/Modal";
 import Input from "../../components/Common/Input";
+import PostCardList from "../PostCardList/PostCardList";
 import postCardsAction from "../../actions/postCards";
 
 import "./UserListWrapper.scss";
@@ -14,8 +15,9 @@ class UserListWrapper extends React.Component {
     super(props);
 
     this.state = {
-      isShowModal: true,
-      selectedUser: {}
+      isShowModal: false,
+      selectedUser: {},
+      postCards: []
     };
 
     this.toggleModal = this.toggleModal.bind(this);
@@ -29,13 +31,21 @@ class UserListWrapper extends React.Component {
     this.setState({
       selectedUser: user
     });
+    if (!user || !user.name) return;
+    this.getUserPostCard(user.id);
   }
   async sendPostCard(userId) {
     const res = await postCardsAction.sendPostCardTo({ userId });
     if (!res) console.log("Failed to send post card");
   }
+  async getUserPostCard(userId) {
+    console.log("get user post card");
+    const res = await postCardsAction.getPostCardsByUserId({ userId });
+    if (!res) console.log("Failed to get post cards");
+    else this.setState({ postCards: res });
+  }
   render() {
-    const { isShowModal, selectedUser } = this.state;
+    const { isShowModal, selectedUser, postCards } = this.state;
     const { className, users } = this.props;
 
     const {
@@ -59,7 +69,10 @@ class UserListWrapper extends React.Component {
         <CreateUser
           toggleModal={() => {
             this.toggleModal(true);
-            this.selectUser({});
+            this.setState({
+                selectedUser: {},
+                postCards: []
+            })
           }}
         />
 
@@ -86,11 +99,20 @@ class UserListWrapper extends React.Component {
               <Input value={zipcode} title={"Zipcode"}></Input>
               <Input value={birthday} title={"Birthday"} type="date"></Input>
               <div>Post card received: {post_card_received}</div>
-              {(selectedUser && userId) && (
+              {selectedUser && userId && (
                 <Button onClick={() => this.sendPostCard(userId)}>
                   Send Post Card
                 </Button>
               )}
+              {postCards &&
+                postCards.length &&
+                postCards.map((postCard, index) => (
+                  <PostCardList
+                    postCard={postCard}
+                    index={index}
+                    key={postCard.post_card_id}
+                  />
+                ))}
             </Modal>
           )}
         </div>

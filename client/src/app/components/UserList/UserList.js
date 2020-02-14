@@ -32,7 +32,6 @@ UserList.propTypes = {
   children: PropTypes.any,
   className: PropTypes.string,
   index: PropTypes.number,
-  skillLevel: PropTypes.string,
   title: PropTypes.string,
   onClick: PropTypes.func,
 };
