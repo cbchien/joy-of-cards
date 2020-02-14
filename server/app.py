@@ -4,10 +4,12 @@ from sqlalchemy.sql import func
 from flask_sqlalchemy import SQLAlchemy
 import lob
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 load_dotenv()
 lob.api_key = os.getenv('LOB_API_KEY')
 app = Flask(__name__)
+CORS(app)
 
 app.config.from_object(os.getenv('APP_SETTINGS'))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
