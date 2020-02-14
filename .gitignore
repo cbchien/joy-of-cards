@@ -15,3 +15,13 @@ pip-delete-this-directory.txt
 # Environments
 server/env/
 .env
+client/.env
+
+#
+client/node_modules
+
+# build
+client/dist
+
+# misc
+client/npm-debug.log*
