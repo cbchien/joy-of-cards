@@ -18,12 +18,13 @@ Integrate Logger
 Frontend:
 
 - Integrate update user
+- Integrate user form submit
+- Add modal form input handler and validations
+- Fix date input value
 - Add typedefs
 - Create a middleware for isomorphic-fetch
 - Refactor styling and UI
 - Add animation and response messages for different action
-- Add modal form input validations
-- Integrate user form submit
 
 Others:
 
