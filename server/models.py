@@ -36,9 +36,6 @@ class User(db.Model):
         self.updated_at = date.today()
         self.name = name
 
-    def __repr__(self):
-        return '<id {} - {}>'.format(self.id, self.name)
-
     def serialize(self):
         return {
             'id': self.id,

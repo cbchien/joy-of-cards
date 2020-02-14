@@ -1,6 +1,6 @@
 from app import db, lob
 from models import User, PostCard
-
+from datetime import date
 
 class LobUltilities:
     def generate_sender_address(self):
@@ -50,6 +50,7 @@ class LobUltilities:
                 )
                 db.session.add(post_card)
                 receiver.post_card_received += 1
+                receiver.updated_at = date.today()
                 db.session.commit()
             return 'Post Card Sent'
 
