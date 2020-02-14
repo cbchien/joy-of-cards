@@ -1,15 +1,11 @@
 import React from 'react';
 import { render } from 'react-dom';
+import App from './app';
 
 import './styles.scss';
 
-const App = () => {
-    return (
-        <div>
-            <h1>Post Card Dashboard</h1>
-            <p>See a list of users here</p>
-        </div>
-    );
+const ReactApp = () => {
+    return <App />;
 }
 
-render(<App />, document.getElementById('app'));
+render(<ReactApp />, document.getElementById('app'));
