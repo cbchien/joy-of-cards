@@ -1,6 +1,8 @@
 
-import LandingPage from './LandingPage/LandingPage'
+import AboutPage from './AboutPage/AboutPage';
+import LandingPage from './LandingPage/LandingPage';
 
 export {
-    LandingPage,
+    AboutPage,
+    LandingPage
 } 

@@ -7,13 +7,15 @@ import {
 } from 'react-router-dom';
 
 import {
-    LandingPage
+  AboutPage,
+  LandingPage
 } from './containers';
 
 function App() {
   return (
     <Router>
       <Switch>
+        <Route exact path="/about" component={AboutPage} />
         <Route exact path="/" component={LandingPage} />
         <Redirect to="/" />
       </Switch>
