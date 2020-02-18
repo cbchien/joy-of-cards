@@ -58,7 +58,7 @@ def add_user():
             address_zip_code=address_zip_code
         )
         db.session.add(user)
-        # db.session.commit()
+        db.session.commit()
         return jsonify(user.serialize())
 
     except Exception as e:
@@ -84,7 +84,7 @@ def update_user_by(userId):
             if body.get(field) is not None:
                 setattr(user, field, body.get(field))
         db.session.commit()
-        return "User updated. user id={} {}".format(user.id, user.name)
+        return jsonify(user.serialize())
     except Exception as e:
         return(str(e))
 
