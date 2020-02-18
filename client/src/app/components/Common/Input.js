@@ -4,10 +4,15 @@ import classnames from "classnames";
 
 import "./Input.scss";
 
-const Input = ({ title, className, ...otherProps }) => {
+const Input = ({ type = 'text', title, className, onChange, ...otherProps }) => {
   const css = classnames("joy-of-cards-input-text", className);
 
-  return (<span>{title}: <input type="text" className={css} {...otherProps} /></span>);
+  return (
+    <span>
+      {title}:{" "}
+      <input type={type} className={css} onChange={onChange} {...otherProps} />
+    </span>
+  );
 };
 
 Input.propTypes = {
@@ -16,7 +21,7 @@ Input.propTypes = {
 };
 
 Input.defaultProps = {
-  onClick: () => {},
+  onChange: () => {},
   className: ""
 };
 

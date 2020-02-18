@@ -1,14 +1,13 @@
+// @ts-nocheck
 import React from "react";
 import PropTypes from "prop-types";
 import UserList from "./UserList";
-import CreateUser from "./CreateUser";
-import Modal from "../../components/Common/Modal";
-import Input from "../../components/Common/Input";
-import PostCardList from "../PostCardList/PostCardList";
+import usersAction from "../../actions/users";
 import postCardsAction from "../../actions/postCards";
 
 import "./UserListWrapper.scss";
 import Button from "../Common/Button";
+import UserModal from "../UserModal/UserModal";
 
 class UserListWrapper extends React.Component {
   constructor(props) {
@@ -16,17 +15,37 @@ class UserListWrapper extends React.Component {
 
     this.state = {
       isShowModal: false,
+      isInEditModal: false,
       selectedUser: {},
       postCards: []
     };
 
     this.toggleModal = this.toggleModal.bind(this);
+    this.handleInput = this.handleInput.bind(this);
   }
-  toggleModal(isOpen) {
+
+  toggleModal({ isOpen, isEditMode }) {
     this.setState({
-      isShowModal: isOpen
+      isShowModal: isOpen,
+      isInEditModal: isEditMode
     });
   }
+
+  handleInput(field, value) {
+    const { selectedUser: updatedUserData } = this.state;
+    if (field === 'birthday') {
+      const [ birthday_year, birthday_month, birthday_day ] = value.split('-')
+      updatedUserData['birthday_year'] = birthday_year;
+      updatedUserData['birthday_month'] = birthday_month;
+      updatedUserData['birthday_day'] = birthday_day;
+    } else {
+      updatedUserData[field] = value;
+    }
+    this.setState({
+      selectedUser: updatedUserData
+    });
+  }
+
   selectUser(user) {
     this.setState({
       selectedUser: user
@@ -34,47 +53,97 @@ class UserListWrapper extends React.Component {
     if (!user || !user.name) return;
     this.getUserPostCard(user.id);
   }
-  async sendPostCard(userId) {
-    const res = await postCardsAction.sendPostCardTo({ userId });
-    if (!res) console.log("Failed to send post card");
-  }
-  async getUserPostCard(userId) {
-    console.log("get user post card");
-    const res = await postCardsAction.getPostCardsByUserId({ userId });
-    if (!res) console.log("Failed to get post cards");
-    else this.setState({ postCards: res });
-  }
-  render() {
-    const { isShowModal, selectedUser, postCards } = this.state;
-    const { className, users } = this.props;
 
+  async createUser(user) {
     const {
-      id: userId,
       address,
-      address_city,
+      name,
       birthday_day,
       birthday_month,
       birthday_year,
       country,
-      name,
-      post_card_received,
+      address_city: city,
       state,
       zipcode
-    } = selectedUser;
-    const birthday = new Date(
-      `${birthday_year}-${birthday_month}-${birthday_day}`
-    );
+    } = user;
+    const { refreshUserList } = this.props;
+
+    await usersAction.createUser({
+      name,
+      birthday_day,
+      birthday_month,
+      birthday_year,
+      city,
+      country,
+      addressLine1: address.substring(0, 70),
+      addressLine2: address.substring(70),
+      state,
+      zipcode
+    })
+    refreshUserList();
+    toggleModal({ isOpen: false });
+  }
+
+  async updateUser(user){
+    console.log(user)
+    const {
+      id,
+      address,
+      name,
+      birthday_day,
+      birthday_month,
+      birthday_year,
+      country,
+      address_city: city,
+      state,
+      zipcode
+    } = user;
+
+    usersAction.updateUser({
+      userId: id,
+      name,
+      birthday_day,
+      birthday_month,
+      birthday_year,
+      city,
+      country,
+      addressLine1: address.substring(0, 70),
+      addressLine2: address.substring(70),
+      state,
+      zipcode
+    })
+  }
+
+  async sendPostCard(userId) {
+    const res = await postCardsAction.sendPostCardTo({ userId });
+    if (!res) console.log("Failed to send post card");
+  }
+
+  async getUserPostCard(userId) {
+    const res = await postCardsAction.getPostCardsByUserId({ userId });
+    if (!res) console.log("Failed to get post cards");
+    else this.setState({ postCards: res });
+  }
+
+  render() {
+    const { isInEditModal, isShowModal, selectedUser, postCards } = this.state;
+    const { className, users } = this.props;
+
     return (
       <>
-        <CreateUser
-          toggleModal={() => {
-            this.toggleModal(true);
-            this.setState({
+        <div className="create-user-container">
+          <Button
+            onClick={() => {
+              this.toggleModal({ isOpen: true, isEditMode: false });
+              this.setState({
                 selectedUser: {},
                 postCards: []
-            })
-          }}
-        />
+              });
+            }}
+          >
+            Create A Users
+          </Button>
+        </div>
 
         <div className={`user-wrapper ${className}`}>
           {(users && users.length) > 0 &&
@@ -84,36 +153,21 @@ class UserListWrapper extends React.Component {
                 index={index + 1}
                 key={`${user.name}-${index}`}
                 onClick={user => {
-                  this.toggleModal(true);
+                  this.toggleModal({ isOpen: true, isEditMode: true });
                   this.selectUser(user);
                 }}
               />
             ))}
           {isShowModal && (
-            <Modal onDismiss={() => this.toggleModal(false)}>
-              <Input value={name} title={"Name"}></Input>
-              <Input value={address} title={"Address"}></Input>
-              <Input value={address_city} title={"City"}></Input>
-              <Input value={country} title={"Country"}></Input>
-              <Input value={state} title={"State"}></Input>
-              <Input value={zipcode} title={"Zipcode"}></Input>
-              <Input value={birthday} title={"Birthday"} type="date"></Input>
-              <div>Post card received: {post_card_received}</div>
-              {selectedUser && userId && (
-                <Button onClick={() => this.sendPostCard(userId)}>
-                  Send Post Card
-                </Button>
-              )}
-              {postCards &&
-                postCards.length &&
-                postCards.map((postCard, index) => (
-                  <PostCardList
-                    postCard={postCard}
-                    index={index}
-                    key={postCard.post_card_id}
-                  />
-                ))}
-            </Modal>
+            <UserModal 
+              onDismiss={() => this.toggleModal({ isOpen: false })}
+              handleInput={(field, value) => this.handleInput(field, value)}
+              isInEditModal={isInEditModal}
+              postCards={postCards}
+              updateUser={user=> this.updateUser(user)}
+              createUser={user=> this.createUser(user)}
+              user={selectedUser}
+            />
           )}
         </div>
       </>

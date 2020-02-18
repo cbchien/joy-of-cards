@@ -29,7 +29,9 @@ const userAction = {
   },
   createUser({
     name,
-    birthday,
+    birthday_day,
+    birthday_month,
+    birthday_year,
     city,
     country,
     addressLine1,
@@ -38,7 +40,6 @@ const userAction = {
     zipcode
   }) {
     let url = `${process.env.API_URL}/users`;
-    const birthdayDate = new Date(birthday);
 
     return fetch(url, {
       method: "POST",
@@ -47,9 +48,9 @@ const userAction = {
       },
       body: JSON.stringify({
         name,
-        birthday_day: birthdayDate.getDay(),
-        birthday_month: birthdayDate.getMonth() + 1,
-        birthday_year: birthdayDate.getFullYear(),
+        birthday_day,
+        birthday_month,
+        birthday_year,
         address_city: city,
         address_country: country,
         address_line_1: addressLine1,
@@ -76,9 +77,10 @@ const userAction = {
     addressLine1,
     addressLine2,
     state,
-    zipcode
+    zipcode,
+    userId
   }) {
-    let url = `${process.env.API_URL}/users`;
+    let url = `${process.env.API_URL}/users/${userId}`;
     const requestBody = {};
     if (name) requestBody["name"] = name;
     if (birthday) {

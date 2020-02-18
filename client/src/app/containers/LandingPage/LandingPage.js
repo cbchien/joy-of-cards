@@ -49,7 +49,7 @@ class LandingPage extends Component {
       <div className="joy-of-cards-landing-page">
         <Header />
         <div>Total Sent: {totalPostCardSent}</div>
-        <UserListWrapper users={users} />
+        <UserListWrapper users={users} refreshUserList={()=> this.getUsers()}/>
         <Footer />
       </div>
     );
