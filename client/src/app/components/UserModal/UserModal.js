@@ -14,7 +14,8 @@ const UserModal = ({
   isInEditModal,
   postCards,
   updateUser,
-  createUser
+  createUser,
+  sendPostCard
 }) => {
   const {
     id: userId,

@@ -41,7 +41,7 @@ const postCardAction = {
       })
       .catch(err => console.log(err));
   },
-  sendPostCardTo({ userId }) {
+  async sendPostCardTo({ userId }) {
     return fetch(`${process.env.API_URL}/post-card?receiver=${userId}`, {
       method: "POST"
     })
@@ -50,6 +50,7 @@ const postCardAction = {
         if (res.confirmation && res.confirmation === 'fail') {
           throw res.message;
         } else {
+          console.log('sent')
           return res;
         }
       })

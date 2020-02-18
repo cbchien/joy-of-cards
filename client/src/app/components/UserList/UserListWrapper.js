@@ -33,11 +33,11 @@ class UserListWrapper extends React.Component {
 
   handleInput(field, value) {
     const { selectedUser: updatedUserData } = this.state;
-    if (field === 'birthday') {
-      const [ birthday_year, birthday_month, birthday_day ] = value.split('-')
-      updatedUserData['birthday_year'] = birthday_year;
-      updatedUserData['birthday_month'] = birthday_month;
-      updatedUserData['birthday_day'] = birthday_day;
+    if (field === "birthday") {
+      const [birthday_year, birthday_month, birthday_day] = value.split("-");
+      updatedUserData["birthday_year"] = birthday_year;
+      updatedUserData["birthday_month"] = birthday_month;
+      updatedUserData["birthday_day"] = birthday_day;
     } else {
       updatedUserData[field] = value;
     }
@@ -79,13 +79,12 @@ class UserListWrapper extends React.Component {
       addressLine2: address.substring(70),
       state,
       zipcode
-    })
+    });
     refreshUserList();
     toggleModal({ isOpen: false });
   }
 
-  async updateUser(user){
-    console.log(user)
+  async updateUser(user) {
     const {
       id,
       address,
@@ -111,18 +110,25 @@ class UserListWrapper extends React.Component {
       addressLine2: address.substring(70),
       state,
       zipcode
-    })
+    });
   }
 
   async sendPostCard(userId) {
-    const res = await postCardsAction.sendPostCardTo({ userId });
-    if (!res) console.log("Failed to send post card");
+    const { refreshUserList } = this.props;
+    await postCardsAction
+      .sendPostCardTo({ userId })
+      .then(() => {
+        refreshUserList();
+        this.getUserPostCard(userId);
+      })
+      .catch(err => console.log("Failed to send post card", err));
   }
 
   async getUserPostCard(userId) {
-    const res = await postCardsAction.getPostCardsByUserId({ userId });
-    if (!res) console.log("Failed to get post cards");
-    else this.setState({ postCards: res });
+    await postCardsAction.getPostCardsByUserId({ userId }).then(res => {
+      this.setState({ postCards: res });
+    })
+    .catch(err => console.log("Failed to get post cards", err));;
   }
 
   render() {
@@ -159,13 +165,14 @@ class UserListWrapper extends React.Component {
               />
             ))}
           {isShowModal && (
-            <UserModal 
+            <UserModal
               onDismiss={() => this.toggleModal({ isOpen: false })}
               handleInput={(field, value) => this.handleInput(field, value)}
               isInEditModal={isInEditModal}
               postCards={postCards}
-              updateUser={user=> this.updateUser(user)}
-              createUser={user=> this.createUser(user)}
+              updateUser={user => this.updateUser(user)}
+              createUser={user => this.createUser(user)}
+              sendPostCard={userId => this.sendPostCard(userId)}
               user={selectedUser}
             />
           )}
